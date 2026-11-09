@@ -1,0 +1,226 @@
+/* ===== AUTH PAGES (login / register / verify-otp) — BLUEPRINT ===== */
+
+body.auth-page {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Layout split 2 cột */
+.auth-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+}
+
+/* ---- Cột trái: panel tối (auth-side.jsp) ---- */
+.auth-side {
+    position: relative;
+    background: #0E1013;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 48px;
+    border-right: 1px solid var(--line-strong);
+}
+.auth-side-bg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; opacity: 0.5;
+}
+.auth-side-top { position: relative; z-index: 1; }
+.auth-side-top img { height: 50px; display: block; }
+.auth-side-bottom { position: relative; z-index: 1; }
+.auth-side-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.2em; color: var(--accent);
+    margin-bottom: 14px;
+}
+.auth-side-heading {
+    font-size: 32px; font-weight: 700; color: #fff;
+    line-height: 1.15; letter-spacing: -0.02em; max-width: 400px;
+}
+.auth-side-chips { display: flex; gap: 10px; margin-top: 26px; flex-wrap: wrap; }
+.auth-side-chip {
+    border: 1px solid rgba(255,255,255,0.3); color: #fff;
+    font-family: var(--font-mono); font-size: 11px; padding: 6px 12px;
+}
+
+/* ---- Cột phải: form ---- */
+.auth-form-side {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 44px;
+    background: var(--bg);
+    overflow-y: auto;
+}
+.auth-form-wrap { width: 100%; max-width: 380px; }
+
+/* Tab Đăng nhập / Đăng ký (link) */
+.auth-tabs { display: flex; border: 1px solid var(--line-strong); margin-bottom: 32px; }
+.auth-tab {
+    flex: 1; padding: 13px; text-align: center;
+    background: var(--bg); color: var(--ink-2);
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    border-right: 1px solid var(--line-strong);
+}
+.auth-tab:last-child { border-right: none; }
+.auth-tab.active { background: var(--ink); color: #fff; }
+
+/* Tiêu đề */
+.auth-title {
+    font-size: 28px; font-weight: 700; letter-spacing: -0.02em;
+    color: var(--ink); margin: 0 0 6px; text-transform: none;
+}
+.auth-sub { font-size: 14px; color: var(--ink-3); margin: 0 0 26px; line-height: 1.6; }
+.auth-sub strong { color: var(--accent); }
+
+/* Trường input — label trên, ô viền 1px vuông */
+.auth-field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; }
+.auth-field-label { font-size: 13px; font-weight: 600; color: var(--ink); }
+.auth-input {
+    width: 100%;
+    border: 1px solid var(--line-hair);
+    outline: none;
+    padding: 13px 15px;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--bg);
+    font-family: inherit;
+    border-radius: 0;
+}
+.auth-input::placeholder { color: var(--ink-3); }
+.auth-input:focus { border-color: var(--accent); }
+
+/* Nút */
+.auth-actions { margin-top: 10px; margin-bottom: 8px; }
+.btn-auth {
+    width: 100%;
+    padding: 15px;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 0;
+    font-family: inherit;
+}
+.btn-auth:hover { background: var(--ink); border-color: var(--ink); }
+
+/* Link chuyển trang */
+.auth-switch { font-size: 14px; color: var(--ink-3); text-align: center; margin: 20px 0 0; }
+.auth-switch a { color: var(--accent); text-decoration: none; font-weight: 600; margin-left: 4px; }
+.auth-switch a:hover { text-decoration: underline; }
+
+/* Thông báo */
+.auth-error {
+    color: var(--err); background: var(--err-bg); border: 1px solid var(--err-line);
+    padding: 10px 14px; font-size: 14px; margin-bottom: 16px; border-radius: 0;
+}
+.auth-success {
+    color: var(--ok); background: var(--ok-bg); border: 1px solid var(--ok-line);
+    padding: 10px 14px; font-size: 14px; margin-bottom: 16px; border-radius: 0;
+}
+
+/* OTP */
+.auth-otp-input {
+    width: 100%;
+    border: 1px solid var(--line-strong);
+    outline: none;
+    padding: 14px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 10px;
+    color: var(--ink);
+    border-radius: 0;
+    box-sizing: border-box;
+}
+.auth-otp-input:focus { border-color: var(--accent); }
+.auth-countdown { text-align: center; font-size: 13px; color: var(--ink-3); margin-bottom: 18px; font-family: var(--font-mono); }
+.auth-countdown span { color: var(--accent); font-weight: 600; }
+.auth-resend { text-align: center; margin-top: 16px; }
+.auth-resend button {
+    background: none; border: none; color: var(--accent);
+    font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: underline;
+    font-family: inherit;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auth-container { grid-template-columns: 1fr; }
+    .auth-side { display: none; }
+    .auth-form-side { padding: 40px 24px; }
+    body.auth-page { overflow: auto; }
+}
+
+/* ============================================================
+   THIẾT KẾ 2026 — ghi đè phần dáng vẻ của bộ auth cũ.
+   Để ở CUỐI file nên thắng các khai báo phía trên mà không phải
+   sửa từng dòng; 6 trang (đăng nhập, đăng ký, OTP đăng ký,
+   quên mật khẩu, OTP quên, đặt lại mật khẩu) đổi cùng lúc.
+   ============================================================ */
+
+.auth-form-side { background: var(--bg-page); }
+.auth-form-wrap { max-width: 420px; }
+
+/* Tab Đăng nhập / Đăng ký — dạng viên thuốc */
+.auth-tabs {
+    border: none; background: #EEF0F4; border-radius: var(--r-pill);
+    padding: 4px; gap: 4px; margin-bottom: 28px;
+}
+.auth-tab {
+    border-right: none; border-radius: var(--r-pill); padding: 10px;
+    background: transparent; color: var(--ink-3); font-size: 13px;
+    transition: background .2s ease, color .2s ease;
+}
+.auth-tab:hover  { color: var(--accent); }
+.auth-tab.active {
+    background: var(--surface); color: var(--accent);
+    box-shadow: 0 1px 3px rgba(20,23,26,.12);
+}
+
+.auth-title { font-size: 30px; }
+.auth-sub   { color: var(--ink-2); }
+
+/* Ô nhập bo tròn + viền sáng khi focus */
+.auth-input, .auth-otp-input {
+    border: 1px solid var(--line-new);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+.auth-input:focus, .auth-otp-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(27,73,255,.12);
+}
+.auth-input::placeholder { color: var(--ink-4); }
+.auth-field-label { color: var(--ink-2); }
+
+/* Nút chính */
+.btn-auth {
+    border-radius: var(--r-md); padding: 14px;
+    transition: box-shadow .22s ease, transform .15s ease;
+}
+.btn-auth:hover {
+    background: var(--accent); border-color: var(--accent);
+    box-shadow: var(--sh-blue); transform: translateY(-2px);
+}
+
+/* Thông báo */
+.auth-error   { border-radius: var(--r-md); background: var(--err-bg-2);
+                border-color: var(--err-line-2); font-size: 13px; }
+.auth-success { border-radius: var(--r-md); background: var(--ok-bg-2);
+                border-color: var(--ok-line-2); color: var(--ok-deep); font-size: 13px; }
+
+/* Chip ở panel trái */
+.auth-side-chip { border-radius: var(--r-pill); }
+
+/* Ô OTP 6 số */
+.auth-otp-input { font-size: 26px; letter-spacing: 12px; }

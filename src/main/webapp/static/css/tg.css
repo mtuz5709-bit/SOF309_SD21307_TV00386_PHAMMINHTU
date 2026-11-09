@@ -1,0 +1,280 @@
+/* ============================================================
+   TiTanGEAR — Bộ thành phần thiết kế 2026
+   Nguồn: "Gaming Peripherals E-commerce Platform/HANDOFF.md" mục 3.
+
+   ĐỂ RIÊNG MỘT FILE, không nhét vào main.css: đang port dần từng
+   trang, để riêng thì trang nào đã port mới ăn style mới, trang
+   chưa port giữ nguyên. Port xong hết thì gộp vào main.css.
+   Mọi class đều có tiền tố tg- nên không đụng class cũ.
+   ============================================================ */
+
+/* ---------- Khung trang ---------- */
+.tg-page { background: var(--bg-page); }
+.tg-wrap { max-width: 1340px; margin: 0 auto; }
+.tg-sect { padding: 56px 60px 0; }
+
+/* ---------- Thẻ ---------- */
+.tg-card {
+    background: var(--surface);
+    border: 1px solid var(--line-new);
+    border-radius: var(--r-xl);
+    box-shadow: var(--sh-card);
+    transition: transform .3s var(--ease), box-shadow .3s ease, border-color .3s ease;
+}
+.tg-lift:hover { transform: translateY(-6px); box-shadow: var(--sh-hover); border-color: #D6DEF9; }
+.tg-lift:hover .tg-zoom { transform: scale(1.07) rotate(-2deg); }
+.tg-lift:hover .tg-cta  { background: var(--accent); color: #fff; border-color: var(--accent); }
+.tg-zoom { transition: transform .45s var(--ease); }
+.tg-cta  { transition: background .25s ease, color .25s ease, border-color .25s ease; }
+
+/* ---------- Nút ---------- */
+.tg-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: inherit; text-decoration: none; cursor: pointer; white-space: nowrap;
+    transition: background .22s ease, color .22s ease, border-color .22s ease,
+                transform .15s ease, box-shadow .22s ease;
+}
+.tg-btn:hover { transform: translateY(-2px); }
+.tg-primary {
+    background: var(--accent); border: 1px solid var(--accent); color: #fff;
+    border-radius: var(--r-md); font-size: 14px; font-weight: 600; padding: 14px 30px;
+}
+.tg-primary:hover { box-shadow: var(--sh-blue); color: #fff; }
+.tg-ghost {
+    background: var(--surface); border: 1px solid var(--line-new); color: var(--ink);
+    border-radius: var(--r-md); font-size: 14px; font-weight: 600; padding: 13px 26px;
+}
+.tg-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.tg-icon-btn {
+    width: 38px; height: 38px; border: 1px solid var(--line-new); background: var(--surface);
+    border-radius: var(--r-md); display: inline-flex; align-items: center; justify-content: center;
+    color: var(--ink-2); position: relative; text-decoration: none;
+}
+.tg-icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Con số trên icon giỏ hàng */
+.tg-badge {
+    position: absolute; top: -5px; right: -5px;
+    min-width: 17px; height: 17px; padding: 0 5px; box-sizing: border-box;
+    border-radius: var(--r-pill); background: var(--accent); color: #fff;
+    font-family: var(--font-mono); font-size: 10px; font-weight: 600; line-height: 17px;
+    text-align: center;
+}
+
+/* Avatar chữ cái đầu.
+   PHẢI khai ở đây (sau .tg-icon-btn) chứ không phải main.css: hai class cùng độ
+   ưu tiên, file nào nạp sau thì thắng — mà tg.css nạp sau main.css, nên bản
+   chữ trắng bên main.css bị .tg-icon-btn (chữ xám) đè, chữ chìm vào nền màu.
+   Nền do server chọn trong bảng 8 màu đậm nên chữ trắng đọc rõ trên cả 8. */
+.tg-icon-btn.avatar-badge,
+.tg-icon-btn.avatar-badge:hover {
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0;
+    line-height: 1;
+    text-decoration: none;
+    /* Viền trắng mảnh tách khối màu khỏi nền nav trắng, đỡ bị "dính" vào nhau */
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.28);
+}
+.tg-icon-btn.avatar-badge:hover { filter: brightness(1.1); }
+
+/* ---------- Nhãn mono ---------- */
+.tg-mono { font-family: var(--font-mono); }
+.tg-eye {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em;
+    color: var(--accent); margin-bottom: 8px;
+}
+.tg-h2 { font-size: 32px; font-weight: 700; margin: 0; letter-spacing: -.025em; }
+.tg-h3 { font-size: 26px; font-weight: 700; margin: 0; letter-spacing: -.02em; }
+.tg-link { font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; }
+
+/* ---------- Chip ---------- */
+.tg-chip {
+    background: var(--surface-3); border-radius: var(--r-pill);
+    font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+    color: var(--ink-2); padding: 4px 10px; display: inline-block;
+    transition: background .2s ease, color .2s ease, transform .15s ease;
+}
+a.tg-chip:hover { background: var(--accent-soft-2); color: var(--accent); transform: translateY(-2px); }
+
+/* ---------- Ticker chạy ngang ---------- */
+.tg-ticker { background: var(--ink-dark); color: #fff; overflow: hidden; padding: 9px 0; }
+.tg-marq { display: flex; width: max-content; animation: tg-marquee 26s linear infinite; }
+.tg-marq span {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em;
+    padding: 0 26px; white-space: nowrap;
+}
+.tg-ticker:hover .tg-marq { animation-play-state: paused; }
+/* Mục Flash Sale trên thanh chạy — bấm được nên phải trông khác 3 câu cam kết.
+   Rê chuột vào thanh là băng chạy dừng lại (luật ngay trên), nhờ vậy bấm trúng. */
+.tg-tick-sale {
+    display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em;
+    margin: 0 26px; padding: 3px 14px; border-radius: var(--r-pill);
+    color: #fff; text-decoration: none;
+    background: rgba(124,155,255,.18); border: 1px solid rgba(124,155,255,.5);
+    transition: background .2s ease, border-color .2s ease;
+}
+.tg-tick-sale:hover { background: var(--accent); border-color: var(--accent); }
+
+/* ---------- Thanh điều hướng ---------- */
+.tg-nav-bar {
+    background: var(--surface); border-bottom: 1px solid var(--line-new);
+    display: flex; align-items: center; justify-content: space-between;
+    height: 76px; padding: 0 44px; position: sticky; top: 0; z-index: 20;
+}
+/* flex:1 + căn giữa: cụm link luôn nằm chính giữa thanh nav bất kể logo rộng
+   bao nhiêu. Dùng space-between như file thiết kế thì ở màn hình rộng cụm link
+   bị lệch, vì .nav-icons trong main.css có margin-left:auto hút hết khoảng trống. */
+.tg-nav-links { display: flex; flex: 1; justify-content: center; gap: 34px; font-size: 14px; font-weight: 500; }
+.tg-nav-bar .nav-icons { margin-left: 0; }
+.tg-nav { position: relative; color: #3A3F45; text-decoration: none; }
+.tg-nav::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px;
+    border-radius: 2px; background: var(--accent);
+    transform: scaleX(0); transform-origin: left; transition: transform .25s var(--ease);
+}
+.tg-nav:hover::after, .tg-nav.is-on::after { transform: scaleX(1); }
+.tg-nav.is-on { color: var(--accent); font-weight: 600; }
+
+/* ---------- Ô danh mục dạng bento ---------- */
+.tg-tile {
+    position: relative; overflow: hidden; border-radius: var(--r-xl);
+    display: block; background: var(--ink-dark);
+    transition: transform .35s var(--ease);
+}
+.tg-tile:hover { transform: translateY(-5px); }
+.tg-tile:hover img { transform: scale(1.06); }
+.tg-tile img {
+    width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;
+    transition: transform .55s var(--ease);
+}
+.tg-tile-veil { position: absolute; inset: 0; }
+.tg-tile-body { position: absolute; bottom: 0; left: 0; right: 0; padding: 32px; }
+
+/* ---------- Thẻ sản phẩm (trang danh sách) ---------- */
+.tg-prod {
+    background: var(--surface); border: 1px solid var(--line-new);
+    border-radius: var(--r-lg); overflow: hidden; display: block;
+    text-decoration: none; color: inherit;
+    transition: transform .3s var(--ease), box-shadow .3s ease, border-color .3s ease;
+}
+.tg-prod:hover { transform: translateY(-6px); box-shadow: var(--sh-hover); border-color: #D6DEF9; }
+.tg-prod:hover .tg-thumb { transform: scale(1.07); }
+.tg-prod:hover .tg-quick { opacity: 1; transform: translateY(0); }
+.tg-thumb { transition: transform .45s var(--ease); }
+/* Nút mua nhanh trượt lên khi rê vào thẻ */
+.tg-quick { opacity: 0; transform: translateY(10px); transition: opacity .25s ease, transform .25s ease; }
+
+/* ---------- Ô lọc bên trái ---------- */
+.tg-filter {
+    display: flex; align-items: center; gap: 9px; width: 100%;
+    padding: 8px 10px; border: none; background: none; border-radius: 10px;
+    font: inherit; font-size: 13px; color: var(--ink-2); cursor: pointer; text-align: left;
+    text-decoration: none; transition: background .18s ease, color .18s ease;
+}
+.tg-filter:hover { background: var(--surface-3); color: var(--ink); }
+.tg-filter.is-on { background: var(--accent-soft-2); color: var(--accent); font-weight: 600; }
+.tg-filter input { position: absolute; opacity: 0; pointer-events: none; }
+.tg-filter-box {
+    width: 15px; height: 15px; flex-shrink: 0; border: 1.5px solid var(--line-hair);
+    border-radius: 5px; display: inline-flex; align-items: center; justify-content: center;
+}
+.tg-filter.is-on .tg-filter-box { border-color: var(--accent); background: var(--accent); }
+.tg-filter-box svg { opacity: 0; }
+.tg-filter.is-on .tg-filter-box svg { opacity: 1; }
+
+/* ---------- Sao đánh giá trên thẻ ---------- */
+.tg-stars { color: var(--warn-2); font-size: 12px; letter-spacing: 1px; }
+.tg-rate  { font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); }
+
+/* ---------- Nút thêm vào so sánh (trên thẻ sản phẩm) ---------- */
+.tg-cmp-btn {
+    width: 38px; flex-shrink: 0; border: none; border-radius: 10px; cursor: pointer;
+    background: var(--ink); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background .2s ease;
+}
+.tg-cmp-btn:hover  { background: var(--accent); }
+.tg-cmp-btn.is-on  { background: var(--accent); box-shadow: 0 0 0 2px var(--accent-line); }
+
+/* ---------- Thanh so sánh nổi ở đáy ---------- */
+.tg-cmp-bar {
+    position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 14px; z-index: 60;
+    background: var(--ink); color: #fff;
+    border-radius: var(--r-lg); padding: 12px 16px;
+    box-shadow: 0 12px 34px rgba(20,23,26,.28);
+    animation: tg-slideup .28s var(--ease) both;
+}
+.tg-cmp-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; color: #A0A4AB; }
+.tg-cmp-list  { display: flex; gap: 8px; }
+.tg-cmp-item  { position: relative; width: 46px; height: 46px; border-radius: 10px;
+                background: #fff; display: inline-flex; align-items: center; justify-content: center; }
+.tg-cmp-item img { width: 100%; height: 100%; object-fit: contain; padding: 4px; box-sizing: border-box; }
+.tg-cmp-no    { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+.tg-cmp-x {
+    position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%;
+    border: none; background: var(--err); color: #fff; font-size: 12px; line-height: 1;
+    cursor: pointer; padding: 0;
+}
+.tg-cmp-go    { padding: 11px 20px; font-size: 13px; border-radius: var(--r-md); }
+.tg-cmp-clear { background: none; border: none; color: #A0A4AB; font: inherit; font-size: 13px; cursor: pointer; }
+.tg-cmp-clear:hover { color: #fff; }
+@keyframes tg-slideup { from { opacity: 0; transform: translate(-50%, 16px); }
+                        to   { opacity: 1; transform: translate(-50%, 0); } }
+
+/* ---------- Phân trang ---------- */
+.tg-pager { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 36px; flex-wrap: wrap; }
+.tg-pager a, .tg-pager span {
+    min-width: 38px; height: 38px; padding: 0 12px; border-radius: var(--r-md);
+    border: 1px solid var(--line-new); background: var(--surface); color: var(--ink-2);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; text-decoration: none;
+    transition: border-color .2s ease, color .2s ease, background .2s ease;
+}
+.tg-pager a:hover { border-color: var(--accent); color: var(--accent); }
+.tg-pager .is-on  { background: var(--accent); border-color: var(--accent); color: #fff; }
+.tg-pager .is-off { opacity: .45; pointer-events: none; }
+
+/* ---------- Thanh so sánh ---------- */
+.tg-track { height: 10px; background: var(--line-soft); border-radius: var(--r-pill); overflow: hidden; }
+.tg-track > span {
+    display: block; height: 100%; border-radius: var(--r-pill);
+    transform-origin: left; animation: tg-grow .9s var(--ease) both;
+}
+
+/* ---------- COMBO (Góc máy đồng bộ) ---------- */
+.tg-combo-grid  { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.tg-combo-strip { height: 4px; border-radius: var(--r-xl) var(--r-xl) 0 0; }
+.tg-combo-tag {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em;
+    font-weight: 600; padding: 4px 10px; border-radius: var(--r-pill);
+}
+.tg-combo-save {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+    color: var(--ok-deep); background: var(--ok-bg-2);
+    border-radius: var(--r-pill); padding: 4px 11px; white-space: nowrap;
+}
+.tg-combo-thumbs { display: flex; gap: 8px; margin-bottom: 18px; }
+.tg-combo-thumb {
+    flex: 1; background: var(--surface-2); border-radius: 12px; padding: 10px;
+    aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
+}
+.tg-combo-thumb img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.tg-combo-old { font-size: 12px; color: var(--ink-4); text-decoration: line-through; }
+@media (max-width: 1100px) { .tg-combo-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Hiệu ứng xuất hiện ---------- */
+@keyframes tg-rise   { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes tg-float  { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+@keyframes tg-pulse  { 0%,100% { transform: scale(1); opacity: .45; } 50% { transform: scale(1.1); opacity: .25; } }
+@keyframes tg-grow   { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes tg-marquee{ from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.tg-rise  { animation: tg-rise .6s var(--ease) both; }
+.tg-float { animation: tg-float 5s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+}

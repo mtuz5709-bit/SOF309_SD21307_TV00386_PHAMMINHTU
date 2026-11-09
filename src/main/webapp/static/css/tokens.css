@@ -1,0 +1,79 @@
+/* ============================================================
+   TiTanGEAR — Design Tokens (Blueprint / phòng lab công nghệ)
+   Nạp TRƯỚC main.css / admin.css / auth.css ở mọi trang.
+   Nguồn: design-reference/HANDOFF.md mục 2.
+   ============================================================ */
+:root {
+    /* Nền */
+    --bg:            #FFFFFF;   /* nền chính */
+    --bg-soft:       #F3F4F6;   /* nền phụ (khối ảnh, vùng xám) */
+    --bg-soft-2:     #F4F5F7;
+
+    /* Mực chữ */
+    --ink:           #14171A;   /* chữ chính */
+    --ink-2:         #5A6068;   /* chữ phụ */
+    --ink-3:         #8A9099;   /* nhãn mờ */
+
+    /* Accent */
+    --accent:        #1B49FF;   /* xanh biển — nút chính, link, giá, active */
+    --accent-soft:   #F0F4FF;   /* nền nhạt của accent */
+
+    /* Đường kẻ */
+    --line:          #E4E7EA;   /* kẻ mảnh trong khối */
+    --line-2:        #ECEEF1;
+    --line-strong:   #14171A;   /* viền đậm khung khối (1px) */
+    --line-hair:     #D7DBDF;   /* viền input/ô nhạt */
+
+    /* Trạng thái */
+    --ok:            #1F7A33;  --ok-bg:   #EAF6EC;  --ok-line:   #BFE0C6;
+    --warn:          #9A6700;  --warn-bg: #FFF6E5;  --warn-line: #E8D5A8;
+    --err:           #C62828;  --err-bg:  #FDECEC;  --err-line:  #F0C4C4;
+
+    /* Font */
+    --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* ========================================================
+       BỘ TOKEN MỚI (thiết kế 2026) — xem HANDOFF.md mục 2.
+       CỐ Ý THÊM MỚI chứ không sửa đè giá trị ở trên: 44 trang JSP
+       đang dùng bộ cũ, sửa đè là cả web vỡ ngay trong lúc mới port
+       được vài trang. Port xong toàn bộ thì gộp lại làm một.
+       ======================================================== */
+
+    /* Nền & mực */
+    --bg-page:       #F5F6F9;   /* nền trang (xám rất nhạt) */
+    --surface:       #FFFFFF;   /* nền thẻ */
+    --surface-2:     #F7F8FB;   /* nền ảnh sản phẩm */
+    --surface-3:     #F3F5F9;   /* chip, ô tìm kiếm */
+    --ink-4:         #A0A4AB;   /* nhãn mono, placeholder */
+    --line-new:      #EAECF0;   /* viền thẻ */
+    --line-soft:     #F0F1F4;   /* viền trong thẻ */
+    --line-hair-2:   #F5F6F8;   /* viền giữa các dòng bảng */
+
+    /* Thương hiệu */
+    --accent-2:      #5B7CFF;   /* xanh nhạt cho gradient */
+    --accent-soft-2: #EDF2FF;   /* nền xanh nhạt */
+    --accent-line:   #CFDBFF;   /* viền xanh nhạt */
+
+    /* Trạng thái (bản đậm hơn để chữ trên nền nhạt đủ tương phản) */
+    --ok-2:          #10A268;  --ok-deep:   #0C7A4E;
+    --ok-bg-2:       #E7F6EF;  --ok-line-2: #BFE6D3;
+    --warn-2:        #E08600;  --warn-deep: #B26A00;
+    --warn-bg-2:     #FFF4E2;  --warn-line-2: #F3E1BE;
+    --err-bg-2:      #FDECEC;  --err-line-2:  #F5CFCF;
+    --violet:        #7A5CC7;  --violet-deep: #6A1B9A;
+    --violet-bg:     #F1ECFB;  --violet-line: #DCCDEF;
+    --ink-dark:      #0E1013;  /* nền tối: ticker, ô danh mục */
+
+    /* Bo góc */
+    --r-sm: 9px;  --r-md: 12px;  --r-lg: 16px;
+    --r-xl: 20px; --r-2xl: 22px; --r-pill: 999px;
+
+    /* Đổ bóng */
+    --sh-card:  0 1px 2px rgba(20,23,26,.04), 0 10px 30px rgba(20,23,26,.05);
+    --sh-hover: 0 6px 14px rgba(20,23,26,.06), 0 24px 50px rgba(27,73,255,.14);
+    --sh-blue:  0 8px 22px rgba(27,73,255,.32);
+
+    /* Chuyển động */
+    --ease: cubic-bezier(.2,.7,.3,1);
+}
