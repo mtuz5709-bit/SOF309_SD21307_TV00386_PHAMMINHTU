@@ -32,4 +32,8 @@ AI sinh ra khung code JUnit 5 cơ bản cho `AuthControllerTest` và `ProductCon
   * Sử dụng `@ExtendWith(MockitoExtension.class)`, `@Mock` và `@InjectMocks` để cô lập hoàn toàn các tầng Service và `HttpSession`.
   * Bắt đúng ngoại lệ cụ thể `LoiNghiepVu.class` trong `assertThrows()` và kiểm tra nội dung thông báo lỗi (`ex.getMessage()`).
   * Bổ sung `@Timeout(value = 2, unit = TimeUnit.SECONDS)` để đảm bảo hiệu năng xử lý của các hàm Controller.
-* **Kết quả:** Đã lưu tại `src/test/java/com/poly/sof309/controllers/AuthControllerTest.java` và `src/test/java/com/poly/sof309/controllers/ProductControllerTest.java`, thực thi pass 100%.
+* **Kết quả chạy thực tế (`mvn test` / VS Code Test Runner):**
+  * `AuthControllerTest`: **10 tests run, 0 Failures, 0 Errors (100% Pass)**
+  * `ProductControllerTest`: **11 tests run, 0 Failures, 0 Errors (100% Pass)**
+  * `SampleControllerTest`: **2 tests run, 0 Failures, 0 Errors (100% Pass)**
+  * **Tổng kết:** **23/23 Controller Unit Tests PASS (`BUILD SUCCESS`)**.
