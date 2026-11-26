@@ -28,13 +28,63 @@ public class UserService {
     @Autowired private ReviewRepository  reviewRepository;
     @Autowired private StockOutRepository stockOutRepository;
 
-    // Đăng ký tài khoản mới — mặc định CUSTOMER
-    public void register(User user) {
+    // Đăng ký tài khoản mới — kiểm tra hợp lệ, lưu và trả về User vừa tạo
+    public User register(User user) {
+        if (user == null) {
+            throw new LoiNghiepVu("Thông tin người dùng không được để trống!");
+        }
+        if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
+            throw new LoiNghiepVu("Vui lòng nhập họ và tên!");
+        }
+        if (user.getFullName().trim().length() < 2) {
+            throw new LoiNghiepVu("Họ tên phải có ít nhất 2 ký tự!");
+        }
+        if (user.getEmail() == null || !user.getEmail().trim().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            throw new LoiNghiepVu("Email không hợp lệ!");
+        }
+        if (user.getPhone() != null && !user.getPhone().trim().isEmpty()
+                && !user.getPhone().trim().matches("[0-9]{10}")) {
+            throw new LoiNghiepVu("Số điện thoại phải đúng 10 chữ số!");
+        }
+        if (user.getPasswordHash() == null || user.getPasswordHash().length() < 6) {
+            throw new LoiNghiepVu("Mật khẩu phải có ít nhất 6 ký tự!");
+        }
+
+        String emailChuan = user.getEmail().toLowerCase().trim();
+        if (userRepository.existsByEmail(emailChuan)) {
+            throw new LoiNghiepVu("Email đã được sử dụng!");
+        }
+
+        user.setFullName(user.getFullName().trim());
+        user.setEmail(emailChuan);
+        if (user.getPhone() != null) {
+            user.setPhone(user.getPhone().trim());
+        }
         user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
         user.setRole("CUSTOMER");
         user.setIsActive(true);
         user.setCreatedAt(LocalDateTime.now());
-        userRepository.save(user);
+        User saved = userRepository.save(user);
+        return saved != null ? saved : user;
+    }
+
+    // Đăng nhập kiểm tra email, mật khẩu và trạng thái tài khoản
+    public User login(String email, String rawPassword) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new LoiNghiepVu("Vui lòng nhập email!");
+        }
+        if (rawPassword == null || rawPassword.isEmpty()) {
+            throw new LoiNghiepVu("Vui lòng nhập mật khẩu!");
+        }
+        User user = userRepository.findByEmail(email.toLowerCase().trim())
+                .orElseThrow(() -> new LoiNghiepVu("Email hoặc mật khẩu không đúng!"));
+        if (Boolean.FALSE.equals(user.getIsActive())) {
+            throw new LoiNghiepVu("Tài khoản của bạn đã bị khóa!");
+        }
+        if (!passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
+            throw new LoiNghiepVu("Email hoặc mật khẩu không đúng!");
+        }
+        return user;
     }
 
     // Admin tạo user với role tùy chọn

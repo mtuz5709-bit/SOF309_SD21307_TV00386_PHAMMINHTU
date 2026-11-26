@@ -11,6 +11,7 @@ import com.titangear.service.ProductService;
 import com.titangear.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,14 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-/**
- * =========================================================================
- * [Y3] BÀI TEST MINH HỌA KIỂM THỬ ĐƠN VỊ CHO CHỨC NĂNG CRUD SẢN PHẨM & GIỎ HÀNG
- * - Kiểm thử đầy đủ 5 ca CRUD sản phẩm (TC_PROD_01 -> TC_PROD_05)
- * - Kiểm thử luồng Giỏ hàng & Giới hạn tồn kho (TC_CART_01, TC_CART_02, TC_CART_04)
- * - Áp dụng @ParameterizedTest + @CsvSource và assertThrows(LoiNghiepVu.class)
- * =========================================================================
- */
+
 @ExtendWith(MockitoExtension.class)
 public class ProductControllerTest {
 
@@ -97,6 +91,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @Tag("smoke")
     @DisplayName("TC_PROD_01: Thêm mới sản phẩm hợp lệ thành công")
     @Timeout(value = 2, unit = TimeUnit.SECONDS)
     public void testAddProductSuccess() {
@@ -115,6 +110,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @Tag("regression")
     @DisplayName("TC_PROD_02: Ném ngoại lệ khi thêm sản phẩm có giá <= 0")
     public void testAddProductInvalidPriceThrowsException() {
         Product invalidProd = new Product();
@@ -132,6 +128,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @Tag("smoke")
     @DisplayName("TC_PROD_03: Lấy thông tin sản phẩm theo ID thành công")
     public void testGetProductByIdSuccess() {
         when(productService.findById(1)).thenReturn(Optional.of(sampleProduct1));
@@ -143,6 +140,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @Tag("smoke")
     @DisplayName("TC_PROD_04: Lấy danh sách toàn bộ sản phẩm")
     public void testListProducts() {
         List<Product> list = List.of(sampleProduct1, sampleProduct2);
@@ -156,6 +154,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @Tag("smoke")
     @DisplayName("TC_PROD_05: Xóa sản phẩm thành công theo ID")
     public void testDeleteProductSuccess() {
         doNothing().when(productService).deleteProduct(2);
@@ -167,6 +166,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @Tag("smoke")
     @DisplayName("TC_CART_01: Thêm sản phẩm vào giỏ với số lượng hợp lệ")
     public void testAddToCartValidQuantitySuccess() {
         when(auth.getName()).thenReturn("minhtu@gmail.com");
@@ -179,6 +179,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @Tag("regression")
     @DisplayName("TC_CART_02: Thêm sản phẩm vượt quá số lượng tồn kho ném ngoại lệ LoiNghiepVu")
     public void testAddToCartExceedStockThrowsException() {
         doThrow(new LoiNghiepVu("Số lượng trong kho không đủ đáp ứng!"))
@@ -192,6 +193,7 @@ public class ProductControllerTest {
     }
 
     @ParameterizedTest
+    @Tag("regression")
     @DisplayName("TC_CART_04: Kiểm tra biên cập nhật số lượng giỏ hàng bằng @CsvSource")
     @CsvSource({
             "10, 0, true",

@@ -1,58 +1,76 @@
-# BỘ KỊCH BẢN KIỂM THỬ CHI TIẾT (TEST CASES)
+# HỒ SƠ ĐẶC TẢ KỊCH BẢN KIỂM THỬ (TEST CASES)
 ### Dự án: TiTanGEAR E-Commerce System
 > **Sinh viên thực hiện:** Phạm Minh Tu – **MSSV:** TV00386 – **Lớp:** SD21307
 
 ---
 
-## 1. MODULE GIỎ HÀNG & OTP (CART & OTP - BÁM SÁT BÀI 1 LAB 1)
+## 0. CHIẾN LƯỢC TEST TỪNG THÀNH PHẦN & CÁCH ĐẶC TẢ VALUE CỤ THỂ
 
-| Test Case ID | Tên ca kiểm thử | Loại test | Tiền điều kiện | Các bước thực hiện | Dữ liệu đầu vào (Test Data) | Kết quả mong đợi | Trạng thái |
-| :---: | :--- | :---: | :--- | :--- | :--- | :--- | :---: |
-| **TC_CART_01** | Thêm sản phẩm vào giỏ với số lượng hợp lệ | Positive | Sản phẩm còn tồn kho (>= 5) | 1. Chọn sản phẩm hợp lệ<br>2. Gọi hàm thêm vào giỏ hàng | `productId = 1`<br>`quantity = 2` | Thêm vào giỏ thành công, chuyển hướng kèm `added=true` | **PASS** |
-| **TC_CART_02** | Thêm sản phẩm vượt quá số lượng tồn kho (Lab 1) | Negative | Tồn kho sản phẩm chỉ còn 5 | 1. Chọn sản phẩm<br>2. Nhập số lượng vượt tồn kho | `productId = 1`<br>`quantity = 999` | Ném `LoiNghiepVu`, thông báo số lượng trong kho không đủ | **PASS** |
-| **TC_CART_03** | Xác thực mã OTP 6 số hợp lệ (Sau khi Debug) | Positive | Đang ở bước xác nhận đăng ký | 1. Nhập mã OTP hợp lệ `123456`<br>2. Bấm xác nhận | `otp = "123456"` | Xác thực thành công, lưu user vào DB và chuyển sang `/login` | **PASS** |
-| **TC_CART_04** | Cập nhật số lượng sản phẩm trong giỏ <= 0 (`@CsvSource`) | Boundary | Giỏ hàng đã có sản phẩm | 1. Nhập bộ dữ liệu biên số lượng (`0`, `-1`, `-5`, `3`)<br>2. Gọi hàm cập nhật giỏ hàng | `cartItemId = 10`<br>`quantity = {0, -1, -5, 3}` | Số lượng `<= 0` tự động xóa khỏi giỏ; `> 0` cập nhật thành công | **PASS** |
-
----
-
-## 2. MODULE XÁC THỰC (AUTHENTICATION - SLIDE 1)
-
-| Test Case ID | Tên ca kiểm thử | Loại test | Tiền điều kiện | Các bước thực hiện | Dữ liệu đầu vào (Test Data) | Kết quả mong đợi | Trạng thái |
-| :---: | :--- | :---: | :--- | :--- | :--- | :--- | :---: |
-| **TC_AUTH_01** | Đăng nhập thành công với Admin | Positive | Tài khoản đã có trong DB | 1. Đăng nhập quyền `ROLE_ADMIN`<br>2. Điều hướng qua `/dashboard` | `user = "admin@titangear.vn"`<br>`role = "ROLE_ADMIN"` | Đăng nhập thành công, chuyển hướng `/admin/dashboard` | **PASS** |
-| **TC_AUTH_02** | Hiển thị trang đăng nhập chuẩn | Positive | Truy cập `/login` | 1. Gọi `authController.login()` | Không có | Trả về đúng view `"common/login"` | **PASS** |
-| **TC_AUTH_03** | Kiểm tra biên validation form đăng ký (`@CsvSource`) | Boundary | Mở form `/register` | 1. Truyền 4 bộ dữ liệu sai biên (email sai, SĐT 5 số, mật khẩu 3 ký tự, tên 1 ký tự)<br>2. Gọi `register()` | 4 bộ dữ liệu `@CsvSource` | Giữ lại trang `"customer/register"` và trả về đúng thông báo lỗi từng trường | **PASS** |
-| **TC_AUTH_04** | Đăng ký người dùng mới hợp lệ | Positive | Chưa có email này trong DB | 1. Điền form đăng ký hợp lệ<br>2. Bấm đăng ký | `email = "minhtu@gmail.com"`<br>`pass = "123456"` | Sinh mã OTP 6 số lưu session, chuyển hướng `/verify-otp` | **PASS** |
-| **TC_AUTH_05** | Đăng ký thất bại khi trùng email | Negative | Email đã tồn tại | 1. Nhập email đã có<br>2. Bấm đăng ký | `email = "admin@titangear.vn"` | Báo lỗi `"Email đã được sử dụng!"` | **PASS** |
-| **TC_AUTH_EX** | Bắt ngoại lệ khi dịch vụ OTP gặp sự cố (`assertThrows`) | Negative | Giả lập lỗi gửi OTP | 1. Gọi `otpService.sendOtp()` với email lỗi | `email = "error@gmail.com"` | Ném ngoại lệ `LoiNghiepVu` và kiểm tra đúng message lỗi | **PASS** |
+1. **Hai mục tiêu của bộ Test Suite:**
+   * **1. Smoke Test Suite (`@Tag("smoke")`) – Kiểm thử khói:** Chạy nhanh các chức năng sống còn (Đăng ký hợp lệ, Đăng nhập hợp lệ, luồng Đăng ký xong $\rightarrow$ Đăng nhập, CRUD sản phẩm, Thêm vào giỏ) để xác nhận hệ thống chạy thông suốt.
+   * **2. Regression Test Suite (`@Tag("regression")`) – Kiểm thử hồi quy:** Quét toàn bộ dữ liệu biên (`@CsvSource`), trùng email, bỏ trống trường (`"Vui lòng nhập họ và tên!"`), tài khoản bị khóa, giá bán âm, vượt tồn kho để đảm bảo khi sửa code không làm hỏng logic cũ.
+2. **Thứ tự bắt đầu kiểm thử từng thành phần (Bottom-Up):**
+   * **Bước 1 – Tầng Service (`AuthServiceTest.java`):** Test logic cốt lõi của `UserService.register(user)` và `UserService.login(email, password)` trên danh sách dữ liệu giả lập (`dsUser`).
+   * **Bước 2 – Tầng Controller (`AuthControllerTest.java`, `ProductControllerTest.java`):** Test điều hướng, validate form và xử lý ngoại lệ ở tầng điều khiển.
+   * **Bước 3 – Tầng UI (`LoginTest.java`):** Test giao diện trình duyệt thật bằng Selenium POM.
+3. **Nguyên tắc kiểm chứng Đăng ký & Đăng nhập bằng Value cụ thể:**
+   * Khi gọi `User created = userService.register(newUser)` với đầy đủ value cụ thể: nếu có lỗi thì ném `LoiNghiepVu`, nếu hợp lệ thì lưu vào danh sách `dsUser` và **trả về `User` vừa tạo**.
+   * **3 bước khẳng định thành công:** `assertNotNull(created)` (không null) $\rightarrow$ gọi `userService.findByEmail(...)` lấy ngược từ danh sách ra $\rightarrow$ `assertEquals` đối chiếu khớp từng thuộc tính (`fullName`, `email`, `phone`, `role`, `isActive`) và đăng nhập thử bằng chính tài khoản đó.
 
 ---
 
-## 3. MODULE QUẢN LÝ SẢN PHẨM (PRODUCT CRUD)
+## 1. SMOKE TEST SUITE (KIỂM THỬ KHÓI – `@Tag("smoke")`)
 
-| Test Case ID | Tên ca kiểm thử | Loại test | Tiền điều kiện | Các bước thực hiện | Dữ liệu đầu vào (Test Data) | Kết quả mong đợi | Trạng thái |
-| :---: | :--- | :---: | :--- | :--- | :--- | :--- | :---: |
-| **TC_PROD_01** | Thêm mới sản phẩm hợp lệ | Positive | Đã đăng nhập quyền Admin | 1. Nhập đầy đủ thông tin<br>2. Gọi hàm `addProduct()` | `name = "Chuột ATK F1 Ultimate"`, `price = 1,850,000` | Sản phẩm được tạo thành công, redirect `/admin/products` | **PASS** |
-| **TC_PROD_02** | Ném ngoại lệ khi giá sản phẩm <= 0 (`assertThrows`) | Negative | Form thêm sản phẩm | 1. Nhập giá bán âm<br>2. Gọi hàm thêm sản phẩm | `price = -50,000` | Ném ngoại lệ `LoiNghiepVu("Giá sản phẩm phải lớn hơn 0")` | **PASS** |
-| **TC_PROD_03** | Lấy thông tin sản phẩm theo ID | Positive | Sản phẩm `ID = 1` đã có | 1. Gọi hàm `editForm(1)` | `id = 1` | Trả về view `"admin/product-form"` kèm đúng đối tượng sản phẩm | **PASS** |
-| **TC_PROD_04** | Lấy toàn bộ danh sách sản phẩm | Positive | Hệ thống có dữ liệu | 1. Gọi hàm `listProducts()` | `page = 1` | Danh sách trả về `>= 2` bản ghi, view `"admin/products"` | **PASS** |
-| **TC_PROD_05** | Xóa sản phẩm theo ID thành công | Positive | Sản phẩm `ID = 2` tồn tại | 1. Gọi hàm `deleteProduct(2)` | `id = 2` | Xóa thành công, redirect `/admin/products` | **PASS** |
+| Test Case ID | Thành phần / Class | Mô tả ca kiểm thử | Dữ liệu đầu vào cụ thể (Test Data - Value) | Các bước & Kiểm chứng (Assertions) | Kết quả mong đợi | Trạng thái |
+| :---: | :--- | :--- | :--- | :--- | :--- | :---: |
+| **TC_SMOKE_REG_01** | `AuthServiceTest` | Đăng ký thành công với thông tin hợp lệ | `fullName = "Phạm Minh Tu"`<br>`email = "minhtu.new@titangear.vn"`<br>`phone = "0912345678"`<br>`passwordHash = "Titan@123"` | 1. Khởi tạo `User` với value trên<br>2. Gọi `created = userService.register(newUser)`<br>3. `assertNotNull(created)` & `assertNotNull(created.getId())`<br>4. Gọi `findByEmail("minhtu.new@titangear.vn")` đối chiếu khớp từng trường | Trả về `User` khác `null`, `role = "CUSTOMER"`, `isActive = true`, lấy ngược lại từ danh sách trùng khớp 100% | **PASS** |
+| **TC_SMOKE_LOGIN_01** | `AuthServiceTest` | Đăng nhập thành công với tài khoản Admin | `email = "admin@titangear.vn"`<br>`rawPassword = "Admin@123"` | 1. Gọi `loggedIn = userService.login("admin@titangear.vn", "Admin@123")`<br>2. `assertNotNull(loggedIn)`<br>3. `assertEquals` kiểm tra `email`, `fullName`, `role`, `isActive` | Trả về `User` khác `null`, `fullName = "Admin TiTanGEAR"`, `role = "ADMIN"`, `isActive = true` | **PASS** |
+| **TC_SMOKE_FLOW_01** | `AuthServiceTest` | Luồng liên hoàn: Đăng ký xong $\rightarrow$ lấy lại kiểm tra $\rightarrow$ đăng nhập ngay | `fullName = "Nguyễn Văn An"`<br>`email = "vanan@titangear.vn"`<br>`phone = "0987654321"`<br>`passwordHash = "Gear@2026"` | 1. Gọi `register(newUser)` $\rightarrow$ `assertNotNull(created)`<br>2. Gọi `findByEmail("vanan@titangear.vn")` $\rightarrow$ `assertTrue(isPresent)`<br>3. Gọi `login("vanan@titangear.vn", "Gear@2026")` $\rightarrow$ `assertEquals(created.getId(), loggedIn.getId())` | Tài khoản mới tạo lấy được từ danh sách và đăng nhập thành công ngay lập tức | **PASS** |
+| **TC_AUTH_01** | `AuthControllerTest` | Đăng nhập quyền Admin điều hướng đúng | `role = "ROLE_ADMIN"` | 1. Gọi `authController.dashboard(auth)`<br>2. `assertEquals("redirect:/admin/dashboard", redirectUrl)` | Điều hướng về `"redirect:/admin/dashboard"` | **PASS** |
+| **TC_AUTH_02** | `AuthControllerTest` | Hiển thị trang đăng nhập chuẩn | Không có | 1. Gọi `authController.login()` | Trả về view `"common/login"` | **PASS** |
+| **TC_AUTH_04** | `AuthControllerTest` | Submit form đăng ký gửi mã OTP | `fullName = "Phạm Minh Tu"`, `email = "minhtu@gmail.com"`, `phone = "0912345678"`, `password = "123456"` | 1. Gọi `authController.register(...)`<br>2. `assertEquals("redirect:/verify-otp", view)` | Lưu session `pending_otp = "123456"` và chuyển sang `"/verify-otp"` | **PASS** |
+| **TC_CART_03** | `AuthControllerTest` | Xác thực mã OTP 6 số hợp lệ | `otp = "123456"`, `pending_email = "minhtu@gmail.com"` | 1. Gọi `authController.verifyOtp("123456", session, model)`<br>2. `verify(userService).register(any())` | Lưu user và chuyển hướng `"/login?registered=true"` | **PASS** |
+| **TC_PROD_01** | `ProductControllerTest` | Thêm mới sản phẩm hợp lệ | `id = 1`, `name = "Chuột ATK F1 Ultimate"`, `price = 1850000`, `stockQuantity = 20` | 1. Gọi `adminProductController.addProduct(...)`<br>2. `assertEquals("redirect:/admin/products", view)` | Lưu sản phẩm và chuyển hướng `"/admin/products"` | **PASS** |
+| **TC_PROD_03** | `ProductControllerTest` | Lấy thông tin sản phẩm theo ID | `id = 1` | 1. Gọi `adminProductController.editForm(1, model)` | Trả về `"admin/product-form"` kèm `sampleProduct1` | **PASS** |
+| **TC_PROD_04** | `ProductControllerTest` | Lấy toàn bộ danh sách sản phẩm | `page = 1` (danh sách có 2 SP mẫu) | 1. Gọi `adminProductController.listProducts(...)` | Danh sách `>= 2` bản ghi, trả về `"admin/products"` | **PASS** |
+| **TC_PROD_05** | `ProductControllerTest` | Xóa sản phẩm theo ID | `id = 2` (`"Bàn phím cơ ATK RS6 Air"`) | 1. Gọi `adminProductController.deleteProduct(2)` | Gọi `deleteProduct(2)` và redirect `"/admin/products"` | **PASS** |
+| **TC_CART_01** | `ProductControllerTest` | Thêm sản phẩm vào giỏ hàng hợp lệ | `userId = 1`, `productId = 1`, `quantity = 2` | 1. Gọi `cartController.addToCart(1, 2, null, false, auth)` | Thêm vào giỏ và redirect `"/products/1?added=true"` | **PASS** |
 
 ---
 
-## 4. TỔNG HỢP KẾT QUẢ CHẠY AUTOMATION UNIT TEST (JUNIT 5 & MOCKITO)
+## 2. REGRESSION TEST SUITE (KIỂM THỬ HỒI QUY – `@Tag("regression")`)
 
-* **Cơ chế tự động hóa (Automation Mechanism):**
-  * Sử dụng **JUnit 5 (Jupiter 5.10.2)** kết hợp **Mockito (`@ExtendWith(MockitoExtension.class)`, `@Mock`, `@InjectMocks`)** để cô lập hoàn toàn các phụ thuộc (`UserService`, `OtpService`, `ProductService`, `CartService`, `HttpSession`, `Model`).
-  * Áp dụng **`@ParameterizedTest` + `@CsvSource`** để tự động hóa kiểm thử lặp qua nhiều bộ dữ liệu biên (Boundary Value Analysis).
-  * Áp dụng **`assertThrows(LoiNghiepVu.class, ...)`** để bắt và kiểm chứng ngoại lệ nghiệp vụ.
-  * Thực thi tự động qua **Maven Surefire Plugin (`mvn test`)**, **VS Code Test Runner** và **GitHub Actions CI/CD**.
+| Test Case ID | Thành phần / Class | Mô tả ca kiểm thử | Dữ liệu đầu vào cụ thể (Test Data - Value) | Ngoại lệ & Thông điệp kỳ vọng chính xác | Trạng thái |
+| :---: | :--- | :--- | :--- | :--- | :---: |
+| **TC_REG_DUP_01** | `AuthServiceTest` | Đăng ký thất bại do trùng email đã tồn tại | `fullName = "Trùng Email"`, `email = "admin@titangear.vn"`, `phone = "0912345678"`, `passwordHash = "Titan@123"` | Ném `LoiNghiepVu`: `"Email đã được sử dụng!"` và danh sách `dsUser` vẫn giữ nguyên `2` bản ghi | **PASS** |
+| **TC_REG_VAL_01a** | `AuthServiceTest` | Đăng ký thất bại khi bỏ trống họ và tên (`@CsvSource`) | `fullName = ""`, `email = "hople@titangear.vn"`, `phone = "0912345678"`, `password = "Titan@123"` | Ném `LoiNghiepVu`: `"Vui lòng nhập họ và tên!"` *(so khớp chính xác từng ký tự để bắt lỗi chính tả)* | **PASS** |
+| **TC_REG_VAL_01b** | `AuthServiceTest` | Đăng ký thất bại khi họ tên < 2 ký tự (`@CsvSource`) | `fullName = "A"`, `email = "hople@titangear.vn"`, `phone = "0912345678"`, `password = "Titan@123"` | Ném `LoiNghiepVu`: `"Họ tên phải có ít nhất 2 ký tự!"` | **PASS** |
+| **TC_REG_VAL_01c** | `AuthServiceTest` | Đăng ký thất bại khi email sai định dạng (`@CsvSource`) | `fullName = "Phạm Minh Tu"`, `email = "khong_co_acong.vn"`, `phone = "0912345678"`, `password = "Titan@123"` | Ném `LoiNghiepVu`: `"Email không hợp lệ!"` | **PASS** |
+| **TC_REG_VAL_01d** | `AuthServiceTest` | Đăng ký thất bại khi SĐT không đủ 10 số (`@CsvSource`) | `fullName = "Phạm Minh Tu"`, `email = "hople@titangear.vn"`, `phone = "091234567"`, `password = "Titan@123"` | Ném `LoiNghiepVu`: `"Số điện thoại phải đúng 10 chữ số!"` | **PASS** |
+| **TC_REG_VAL_01e** | `AuthServiceTest` | Đăng ký thất bại khi mật khẩu < 6 ký tự (`@CsvSource`) | `fullName = "Phạm Minh Tu"`, `email = "hople@titangear.vn"`, `phone = "0912345678"`, `password = "12345"` | Ném `LoiNghiepVu`: `"Mật khẩu phải có ít nhất 6 ký tự!"` | **PASS** |
+| **TC_LOGIN_FAIL_01** | `AuthServiceTest` | Đăng nhập thất bại khi sai mật khẩu | `email = "admin@titangear.vn"`, `rawPassword = "SaiMatKhau@999"` | Ném `LoiNghiepVu`: `"Email hoặc mật khẩu không đúng!"` | **PASS** |
+| **TC_LOGIN_FAIL_02** | `AuthServiceTest` | Đăng nhập thất bại với tài khoản bị khóa | `email = "locked@titangear.vn"`, `rawPassword = "Locked@123"` | Ném `LoiNghiepVu`: `"Tài khoản của bạn đã bị khóa!"` | **PASS** |
+| **TC_LOGIN_FAIL_03** | `AuthServiceTest` | Đăng nhập thất bại khi bỏ trống email hoặc mật khẩu (`@CsvSource`) | 1) `email = ""`, `pass = "Admin@123"`<br>2) `email = "admin@titangear.vn"`, `pass = ""` | 1) `"Vui lòng nhập email!"`<br>2) `"Vui lòng nhập mật khẩu!"` | **PASS** |
+| **TC_AUTH_03** | `AuthControllerTest` | Kiểm tra biên form đăng ký trên Controller (`@CsvSource`) | 4 bộ: email `"email_sai_dinh_dang"`, SĐT `"09123"`, pass `"123"`, tên `"A"` | Giữ lại `"customer/register"` và gán đúng từng thông báo lỗi vào `model` | **PASS** |
+| **TC_AUTH_05** | `AuthControllerTest` | Controller báo lỗi trùng email | `email = "admin@titangear.vn"` | Giữ lại `"customer/register"`, `error = "Email đã được sử dụng!"` | **PASS** |
+| **TC_AUTH_EX** | `AuthControllerTest` | Bắt ngoại lệ khi dịch vụ gửi OTP gặp sự cố | `email = "error@gmail.com"`, `otp = "123456"` | Ném `LoiNghiepVu`: `"Không thể gửi mã OTP tới email này"` | **PASS** |
+| **TC_PROD_02** | `ProductControllerTest` | Báo lỗi khi giá sản phẩm `<= 0` | `id = 4`, `name = "Lót chuột Gaming lỗi giá"`, `price = -50000` | Ném `LoiNghiepVu`: `"Giá sản phẩm phải lớn hơn 0"` | **PASS** |
+| **TC_CART_02** | `ProductControllerTest` | Thêm vào giỏ vượt quá tồn kho | `userId = 1`, `productId = 1`, `quantity = 999` | Ném `LoiNghiepVu`: `"Số lượng trong kho không đủ đáp ứng!"` | **PASS** |
+| **TC_CART_04** | `ProductControllerTest` | Cập nhật số lượng giỏ hàng `<= 0` (`@CsvSource`) | `cartItemId = 10`, `quantity = {0, -1, -5, 3}` | `<= 0` gọi `removeItem(1, 10)`; `quantity = 3` gọi `updateQuantity(1, 10, 3)` | **PASS** |
 
-* **Thống kê kết quả thực thi thực tế:**
+---
 
-| Class Kiểm thử (`src/test/java/com/poly/sof309/controllers/`) | Số hàm `@Test` / `@ParameterizedTest` | Tổng số ca chạy tự động (Test Runs) | Kết quả (Pass / Fail / Error) | Tỷ lệ thành công |
-| :--- | :---: | :---: | :---: | :---: |
-| **`AuthControllerTest.java`** | 7 phương thức (1 `@CsvSource` x 4 dòng) | **10 tests** | `10 Pass / 0 Fail / 0 Error` | **100% PASS** |
-| **`ProductControllerTest.java`** | 8 phương thức (1 `@CsvSource` x 4 dòng) | **11 tests** | `11 Pass / 0 Fail / 0 Error` | **100% PASS** |
-| **`SampleControllerTest.java`** | 2 phương thức | **2 tests** | `2 Pass / 0 Fail / 0 Error` | **100% PASS** |
-| **TỔNG CỘNG (CONTROLLER UNIT TESTS)** | **17 phương thức** | **23 tests** | **23 Pass / 0 Fail / 0 Error** | **100% PASS (BUILD SUCCESS)** |
+## 3. CÁCH CHẠY TỪNG SUITE & KIỂM CHỨNG ĐỘ TIN CẬY (CÀI BUG THỬ FAIL $\rightarrow$ SỬA LẠI PASS)
+
+### Lệnh chạy từng Suite với Maven:
+* **Chạy riêng Smoke Test Suite:** `mvn test -Dgroups=smoke`
+* **Chạy riêng Regression Test Suite:** `mvn test -Dgroups=regression`
+* **Chạy riêng AuthServiceTest:** `mvn test -Dtest=AuthServiceTest`
+* **Chạy toàn bộ Test Suite:** `mvn test`
+
+### Minh chứng kiểm thử bắt Bug thực tế (Mutation Check):
+1. **Pha 1 (Pass 100%):** Toàn bộ `AuthServiceTest`, `AuthControllerTest`, `ProductControllerTest` đều đạt **PASS (0 Failure, 0 Error)**.
+2. **Pha 2 (Cố tình cài bug của Dev vào `UserService.java`):** Sửa thông báo `"Vui lòng nhập họ và tên!"` thành `"Vui lohng nhập họ và tên."` $\rightarrow$ chạy lại `AuthServiceTest` $\rightarrow$ **TC_REG_VAL_01a lập tức báo FAIL**:
+   * `expected: <Vui lòng nhập họ và tên!> but was: <Vui lohng nhập họ và tên.>`
+   * Giúp QA phát hiện chính xác dòng code dev viết sai chính tả/sai logic.
+3. **Pha 3 (Fix bug & chạy lại):** Sửa lại thành `"Vui lòng nhập họ và tên!"` $\rightarrow$ chạy lại `mvn test` $\rightarrow$ toàn bộ đạt **100% PASS (`BUILD SUCCESS`)**.

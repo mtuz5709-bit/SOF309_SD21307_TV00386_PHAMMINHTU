@@ -21,6 +21,12 @@ bin/
 *.jar
 *.war
 
+# Backup Assets from TiTanGEAR
+*.zip
+design-reference/
+Gaming Peripherals E-commerce Platform/
+TRUY-VAN-BAO-VE-DO-AN.sql
+
 # Private / Lecturer materials (Không đưa lên Git của SV)
 *.pdf
 *.docx
