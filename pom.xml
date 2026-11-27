@@ -20,7 +20,11 @@
         <spring.security.version>6.2.4</spring.security.version>
         <hibernate.version>6.4.4.Final</hibernate.version>
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
+        <testng.version>7.10.2</testng.version>
         <selenium.version>4.20.0</selenium.version>
+        <suiteXmlFile>testng.xml</suiteXmlFile>
+        <headless>false</headless>
+        <baseUrl>http://localhost:8080</baseUrl>
     </properties>
 
     <dependencies>
@@ -174,12 +178,24 @@
         </dependency>
 
         <!-- ============================================== -->
-        <!-- [Y4] SELENIUM WEBDRIVER CHO UI AUTOMATION     -->
+        <!-- [Y4] TESTNG, SELENIUM WEBDRIVER & COMMONS IO   -->
         <!-- ============================================== -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.16.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -211,7 +227,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Maven Surefire Plugin để tự động chạy Test -->
+            <!-- Maven Surefire Plugin: provider được chọn theo profile (junit5 mặc định hoặc testng) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -219,4 +235,60 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- [Y3] Profile mặc định chạy JUnit 5 (tự tắt khi truyền -Ptestng) -->
+        <profile>
+            <id>junit5</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.2.5</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.maven.surefire</groupId>
+                                <artifactId>surefire-junit-platform</artifactId>
+                                <version>3.2.5</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- [Y4 - Tuần 4] Profile chạy TestNG qua testng.xml: mvn test -Ptestng -->
+        <profile>
+            <id>testng</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.2.5</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.maven.surefire</groupId>
+                                <artifactId>surefire-testng</artifactId>
+                                <version>3.2.5</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <systemPropertyVariables>
+                                <headless>${headless}</headless>
+                                <baseUrl>${baseUrl}</baseUrl>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

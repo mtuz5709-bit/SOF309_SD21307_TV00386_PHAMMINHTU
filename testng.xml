@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="TiTanGEAR TestNG Suite - Tuan 4 (Y4 P2)" verbose="1">
+
+    <listeners>
+        <listener class-name="com.poly.sof309.ui.listeners.TestListener"/>
+    </listeners>
+
+    <test name="Auth Data-Driven &amp; Dependency Tests (Smoke + Regression)">
+        <classes>
+            <class name="com.poly.sof309.ui.tests.AuthDataDrivenTestNG"/>
+        </classes>
+    </test>
+
+</suite>

@@ -1,5 +1,6 @@
 package com.titangear.service;
 
+import com.titangear.exception.LoiNghiepVu;
 import com.titangear.model.Product;
 import com.titangear.model.ProductLine;
 import com.titangear.model.ProductSpec;
@@ -71,6 +72,18 @@ public class ProductService {
     }
 
     public Product addProduct(Product product) {
+        if (product == null) {
+            throw new LoiNghiepVu("Thông tin sản phẩm không được để trống!");
+        }
+        if (product.getName() == null || product.getName().trim().isEmpty()) {
+            throw new LoiNghiepVu("Tên sản phẩm không được để trống!");
+        }
+        if (product.getPrice() == null || product.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new LoiNghiepVu("Giá sản phẩm phải lớn hơn 0!");
+        }
+        if (product.getStockQuantity() != null && product.getStockQuantity() < 0) {
+            throw new LoiNghiepVu("Số lượng tồn kho không được âm!");
+        }
         product.setIsActive(true);
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());

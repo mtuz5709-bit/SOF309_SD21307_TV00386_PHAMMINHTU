@@ -7,7 +7,6 @@ import com.titangear.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,7 +57,6 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Tag("smoke")
     @DisplayName("TC_AUTH_01: Đăng nhập thành công với Admin chuyển hướng về /admin/dashboard")
     @Timeout(value = 2, unit = TimeUnit.SECONDS)
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -73,7 +71,6 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Tag("smoke")
     @DisplayName("TC_AUTH_02: Mở trang đăng nhập trả về đúng view common/login")
     public void testLoginViewPage() {
         String viewName = authController.login();
@@ -81,7 +78,6 @@ public class AuthControllerTest {
     }
 
     @ParameterizedTest
-    @Tag("regression")
     @DisplayName("TC_AUTH_03: Kiểm tra biên validation form đăng ký bằng @ParameterizedTest & @CsvSource")
     @CsvSource({
             "'Phạm Minh Tu', 'email_sai_dinh_dang', '0912345678', '123456', 'Email không hợp lệ!'",
@@ -103,7 +99,6 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Tag("smoke")
     @DisplayName("TC_AUTH_04: Đăng ký người dùng mới hợp lệ thành công và gửi mã OTP")
     @Timeout(value = 2, unit = TimeUnit.SECONDS)
     public void testRegisterNewUserSuccess() {
@@ -125,7 +120,6 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Tag("regression")
     @DisplayName("TC_AUTH_05: Đăng ký thất bại khi trùng email đã có trong hệ thống")
     public void testRegisterDuplicateEmailFailed() {
         when(userService.emailExists("admin@titangear.vn")).thenReturn(true);
@@ -144,7 +138,6 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Tag("smoke")
     @DisplayName("TC_CART_03: Xác thực mã OTP 6 số hợp lệ thành công")
     public void testVerifyOtpSuccess() {
         when(session.getAttribute("pending_otp")).thenReturn("123456");
@@ -161,7 +154,6 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Tag("regression")
     @DisplayName("TC_AUTH_EX: Kiểm thử ngoại lệ assertThrows khi gửi OTP thất bại hoặc vi phạm nghiệp vụ")
     public void testSendOtpExceptionThrows() {
         doThrow(new LoiNghiepVu("Không thể gửi mã OTP tới email này"))

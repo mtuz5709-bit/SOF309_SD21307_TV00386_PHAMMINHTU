@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="TiTanGEAR Selenium POM UI Suite" verbose="1">
+
+    <listeners>
+        <listener class-name="com.poly.sof309.ui.listeners.TestListener"/>
+    </listeners>
+
+    <test name="Selenium POM UI Tests (Local Tomcat / Screenshot Demo)">
+        <classes>
+            <class name="com.poly.sof309.ui.tests.SeleniumLoginTestNG"/>
+        </classes>
+    </test>
+
+</suite>
